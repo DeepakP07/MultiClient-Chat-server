@@ -2,7 +2,9 @@ import socket, pdb
 
 MAX_CLIENTS = 30
 PORT = 22223
-QUIT_STRING = '<$quit$>'
+QUIT_STRING = 'quit'
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8" , 80))
 
 
 def create_socket(address):
@@ -11,8 +13,7 @@ def create_socket(address):
     s.setblocking(0)
     s.bind(address)
     s.listen(MAX_CLIENTS)
-    print("Now listening at ", address)
-    
+    print("Now listening at ", address, s.getsockname()[0])
     return s
 
 class Hall:
@@ -41,7 +42,7 @@ class Hall:
             + b'[<list>] to list all rooms\n'\
             + b'[<join> room_name] to join/create/switch to a room\n' \
             + b'[<manual>] to show instructions\n' \
-            + b'[<quit>] to quit\n' \
+            + b'[quit] to quit\n' \
             + b'Otherwise start typing and enjoy!' \
             + b'\n'
 
@@ -79,7 +80,7 @@ class Hall:
         elif "<manual>" in msg:
             player.socket.sendall(instructions)
         
-        elif "<quit>" in msg:
+        elif "quit" in msg:
             player.socket.sendall(QUIT_STRING.encode())
             self.remove_player(player)
 
