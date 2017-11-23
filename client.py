@@ -4,12 +4,12 @@ import chat_util
 READ_BUFFER = 4096
 
 host = '127.0.0.1'
-port = '22223'
+port = '8888'
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))
 
 if len(sys.argv) < 2:
-    print("Usage: Python client.py [host]", file = sys.stderr)
+    print("Usage: Python client.py, Can't open to the server.Please provide the host.[host]", file = sys.stderr)
     sys.exit(1)
 else:
     server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,9 +22,12 @@ def prompt():
 
 print("Connected to server\n")
 msg_prefix = ' '
+#def test(self, new_player):
+#        new_player.socket.sendall(b'Enter helo:\n')
+    
 
-Helo = input(" ")
-print(Helo)
+Helo = input("  \n ")
+print(Helo + "Base_Test")
 print("IP Address is" ' ' + s.getsockname()[0])
 print(port)
 print (host)
