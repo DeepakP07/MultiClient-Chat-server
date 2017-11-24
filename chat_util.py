@@ -4,8 +4,7 @@ MAX_CLIENTS = 30
 PORT = 22223
 QUIT_STRING = 'quit'
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8" , 80))
-
+s.connect(("8.8.8.8", 80))
 
 def create_socket(address):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,22 +12,22 @@ def create_socket(address):
     s.setblocking(0)
     s.bind(address)
     s.listen(MAX_CLIENTS)
-    print("Now listening at ", address, s.getsockname()[0])
+    print("Server Connected  ", address,s.getsockname()[0])
     return s
 
-class Hall:
+class Chatroom:
     def __init__(self):
         self.rooms = {} # {room_name: Room}
         self.room_player_map = {} # {playerName: roomName}
 
     def welcome_new(self, new_player):
-        new_player.socket.sendall(b'Welcome to pychat.\nPlease tell us your name:\n')
+        new_player.socket.sendall(b'Welcome to chat.\nPlease tell us your name:\n')
     
     def list_rooms(self, player):
         
         if len(self.rooms) == 0:
             msg = 'Oops, no active rooms currently. Create your own!\n' \
-                + 'Use [<join> room_name] to create a room.\n'
+                + 'Use [join room_name] to create a room.\n'
             player.socket.sendall(msg.encode())
         else:
             msg = 'Listing current rooms...\n'
@@ -39,9 +38,9 @@ class Hall:
     def handle_msg(self, player, msg):
         
         instructions = b'Instructions:\n'\
-            + b'[<list>] to list all rooms\n'\
-            + b'[<join> room_name] to join/create/switch to a room\n' \
-            + b'[<manual>] to show instructions\n' \
+            + b'[list] to list all rooms\n'\
+            + b'[join room_name] to join/create/switch to a room\n' \
+            + b'[manual] to show instructions\n' \
             + b'[quit] to quit\n' \
             + b'Otherwise start typing and enjoy!' \
             + b'\n'
@@ -53,7 +52,7 @@ class Hall:
             print("New connection from:", player.name)
             player.socket.sendall(instructions)
 
-        elif "<join>" in msg:
+        elif "join" in msg:
             same_room = False
             if len(msg.split()) >= 2: # error check
                 room_name = msg.split()[1]
@@ -74,15 +73,16 @@ class Hall:
             else:
                 player.socket.sendall(instructions)
 
-        elif "<list>" in msg:
+        elif "list" in msg:
             self.list_rooms(player) 
 
-        elif "<manual>" in msg:
+        elif "manual" in msg:
             player.socket.sendall(instructions)
         
         elif "quit" in msg:
             player.socket.sendall(QUIT_STRING.encode())
             self.remove_player(player)
+            
 
         else:
             # check if in a room or not first
@@ -90,8 +90,8 @@ class Hall:
                 self.rooms[self.room_player_map[player.name]].broadcast(player, msg.encode())
             else:
                 msg = 'You are currently not in any room! \n' \
-                    + 'Use [<list>] to see available rooms! \n' \
-                    + 'Use [<join> room_name] to join a room! \n'
+                    + 'Use [list] to see available rooms! \n' \
+                    + 'Use [join room_name] to join a room! \n'
                 player.socket.sendall(msg.encode())
     
     def remove_player(self, player):
