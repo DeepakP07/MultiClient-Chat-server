@@ -1,4 +1,4 @@
-CS7NS1 (Scablable Computing) -- Assignment 1 (Chat Server)Multiple chat room with Multiple client.
+CS7NS1 (Scalable Computing) -- Assignment 1 (Chat Server)Multiple chat room with Multiple client.
 ========================================
 ***Student ID:17310212 Name: Deepak Purohit
 
